@@ -1,0 +1,132 @@
+html {
+  background: linear-gradient(
+      122deg,
+      rgba(172, 197, 227, 1) 0%,
+      rgba(227, 231, 243, 1) 51%,
+      rgb(243, 226, 231) 80%,
+      rgba(145, 163, 209, 1) 99%
+    )
+    no-repeat center center fixed;
+  font-family: "Comic Sans MS", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav {
+  background-color: #042940;
+  overflow: hidden;
+  margin: -8px;
+}
+
+a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 20px 25px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+a:hover {
+  background-color: #0089c2;
+  color: white;
+}
+
+.active {
+  background-color: #0089c2;
+  color: white;
+}
+
+.h3_img_gerb {
+  font-weight: normal;
+  text-align: center;
+  margin-top: -7px;
+  margin-bottom: 5px;
+}
+
+.div_gerb {
+  width: max-content;
+  float: left;
+  padding-right: 10px;
+}
+
+.h3_img_flag {
+  font-weight: normal;
+  text-align: center;
+  margin-top: -4px;
+  margin-bottom: 5px;
+}
+
+.div_flag {
+  width: max-content;
+  float: right;
+  margin-top: 6px;
+}
+
+.div_flag_gerb {
+  float: left;
+}
+
+.flag_gerb_compon {
+  overflow: hidden;
+  width: max-content;
+  margin: 0px auto 0px auto;
+}
+
+.div_ifo {
+  width: max-content;
+  overflow: hidden;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.div_ifo h3 {
+  float: left;
+  margin: 5px 0px 5px 0px;
+}
+
+.div_ifo span {
+  font-weight: normal;
+}
+
+.leftimg {
+  float: left;
+  margin: 7px 7px 7px 0;
+}
+
+.img1 {
+  border-radius: 5px;
+}
+
+.p_n {
+  font-size: 20px;
+}
+
+.div1 {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.sp1 {
+  font-weight: bold;
+}
+
+.h1 {
+  text-align: center;
+}
+.img2 {
+  border-radius: 8px;
+  border: solid 2px navy;
+  box-shadow: 5px 5px 5px rgb(0, 89, 255);
+}
+
+.div3 {
+  height: max-content;
+  width: 470px;
+  display: block;
+  float: left;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.418);
+  margin-left: 80px;
+  margin-right: 80px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
