@@ -10,7 +10,6 @@ class UserForm extends Component {
         let passwordIsValid = this.validatePassword(password);
 
         let confirmPassword = props.ConfirmPassword;
-        // let confirmPasswordIsValid = this.validateConfirmPassword(confirmPassword);
 
         let fullName = props.FullName;
         let fullNameIsValid = this.validateFullName(fullName);
@@ -18,32 +17,23 @@ class UserForm extends Component {
         let gender = props.Gender;
         let genderIsValid = this.validateGender(gender);
         let isCheckedM = false, isCheckedF = false;
-        if (genderIsValid == true) {
-            switch (this.props.Gender) {
-                case 'М':
-                    isCheckedM = true;
-                    break;
-                case 'Ж':
-                    isCheckedF = true;
-                    break;
-            }
+        if (genderIsValid === true) {
+            if (this.props.gender === 'М')
+                isCheckedM = true;
+            else if (this.props.gender === 'Ж')
+                isCheckedF = true;
         }
 
         let specialization = props.Specialization;
         let specializationIsValid = this.validateSpecialization(specialization);
         let isCheckedDesign = false, isCheckedProgram = false, isCheckedAdmin = false;
-        if (genderIsValid == true) {
-            switch (this.props.Specialization) {
-                case 'М':
-                    isCheckedDesign = true;
-                    break;
-                case 'Ж':
-                    isCheckedProgram = true;
-                    break;
-                case 'X':
-                    isCheckedAdmin = true;
-                    break;
-            }
+        if (genderIsValid === true) {
+            if (this.props.specialization === 'Дизайн')
+                isCheckedDesign = true;
+            else if (this.props.specialization === 'Программирование')
+                isCheckedProgram = true;
+            else if (this.props.specialization === 'Администрирование')
+                isCheckedAdmin = true;
         }
 
 
@@ -61,7 +51,7 @@ class UserForm extends Component {
 
             loginValid: loginIsValid,
             passwordValid: passwordIsValid,
-            confirmPasswordValid: false/*confirmPasswordIsValid*/,
+            confirmPasswordValid: false,
             fullnameValid: fullNameIsValid,
             genderValid: genderIsValid,
             specializationValid: specializationIsValid,
@@ -73,7 +63,8 @@ class UserForm extends Component {
             checkDesign: isCheckedDesign,
             checkProgram: isCheckedProgram,
             checkAdmin: isCheckedAdmin,
-            submittedData: false
+            submittedData: false,
+            showRegForm: true,
         };
 
         this.onLoginChange = this.onLoginChange.bind(this);
@@ -85,22 +76,20 @@ class UserForm extends Component {
         this.onPositionChange = this.onPositionChange.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onReset = this.onReset.bind(this);
+        this.onBackClick = this.onBackClick.bind(this);
     }
 
     validateLogin(login) {
-        return login.length > 2;
+        return login.trim().length > 3;
     }
 
     validatePassword(password) {
-        return password.length > 2 && password.length < 11;
+        return password.trim().length > 3 && password.trim().length < 10;
     }
 
-    // validateConfirmPassword(confirmPassword) {
-    //     return confirmPassword === this.state.password;
-    // }
-
     validateFullName(fullname) {
-        return fullname.length > 2;
+        return fullname.trim().length > 3;
     }
 
     validateGender(gender) {
@@ -144,34 +133,34 @@ class UserForm extends Component {
         let val = e.target.value;
 
         let checkm = false, checkf = false;
-        if (this.props.gender == 'M') {
+        if (val === 'М') {
             checkm = true;
-        } else if (this.props.gender == 'Ж') {
+        } else if (val === 'Ж') {
             checkf = true;
         }
         let valid = this.validateGender(val);
-        this.setState({gender: val, genderValid: valid, showGenderError: true, checkedM: checkm, checkedF: checkf});
+        this.setState({gender: val, genderValid: valid, showGenderError: true, checkM: checkm, checkF: checkf});
     }
 
     onSpecializationChange(e) {
         let val = e.target.value;
+
         let checkD = false, checkP = false, checkA = false;
-        if (this.props.gender == 'Design') {
+        if (val === 'Дизайн') {
             checkD = true;
-        } else if (this.props.gender == 'Program') {
+        }
+        if (val === 'Программирование') {
             checkP = true;
-        } else if (this.props.gender == 'Admin') {
+        }
+        if (val === 'Администрирование') {
             checkA = true;
         }
 
         let valid = this.validateSpecialization(val);
         this.setState({
-            specialization: val,
-            specializationValid: valid,
-            showSpecializationError: true,
-            checkDesign: checkD,
-            checkProgram: checkP,
-            checkAdmin: checkA
+            specialization: val, specializationValid: valid,
+            showSpecializationError: true, checkDesign: checkD,
+            checkProgram: checkP, checkAdmin: checkA
         });
     }
 
@@ -189,13 +178,7 @@ class UserForm extends Component {
             this.state.genderValid === true && this.state.specializationValid === true &&
             this.state.positionValid === true
         ) {
-            this.setState({submittedData: true});
-            alert(
-                "Имя: " + this.state.login + "\nФамилия: " + this.state.password +
-                "\nВозраст: " + this.state.confirmPassword + "\nРейтинг: " + this.state.fullname +
-                "\nРейтинг: " + this.state.gender + "\nРейтинг: " + this.state.specialization +
-                "\nРейтинг: " + this.state.position
-            );
+            this.setState({showRegForm: false, submittedData: true});
         } else this.setState({
             showLoginError: true, showPasswordError: true,
             showConfirmPasswordError: true, showFullNameError: true, showGenderError: true,
@@ -203,94 +186,115 @@ class UserForm extends Component {
         });
     }
 
+    onReset(e) {
+        this.reset();
+    }
+
+    onBackClick(e) {
+        this.setState({showRegForm: true,});
+        this.reset();
+    }
+
+    reset() {
+        this.setState({
+            showLoginError: false, showPasswordError: false, showConfirmPasswordError: false,
+            showFullNameError: false, showGenderError: false, showSpecializationError: false,
+            showPositionError: false, submittedData: false, login: '', password: '', confirmPassword: '',
+            fullname: '', gender: '', specialization: '', position: 'none', checkDesign: false,
+            checkProgram: false, checkAdmin: false,
+        });
+    }
+
     render() {
         let errorLoginMessage = this.state.loginValid ? "" : "Некорректная длина Логина";
-        let errorPasswordMessage = this.state.passwordValid ? "" : "Некорректная длина Логина";
-        let errorConfirmPasswordMessage = this.state.confirmPasswordValid ? "" : "Некорректная длина Логина";
-        let errorFullNameMessage = this.state.fullnameValid ? "" : "Некорректная длина Логина";
-        let errorGenderMessage = this.state.genderValid ? "" : "Некорректная длина Логина";
-        let errorSpecializationMessage = this.state.specializationValid ? "" : "Некорректная длина Логина";
-        let errorPositionMessage = this.state.positionValid ? "" : "Некорректная длина Логина";
+        let errorPasswordMessage = this.state.passwordValid ? "" : "Некорректная длина пароля";
+        let errorConfirmPasswordMessage = this.state.confirmPasswordValid ? "" : "Пароли не совпадают";
+        let errorFullNameMessage = this.state.fullnameValid ? "" : "Некорректное полное имя";
+        let errorGenderMessage = this.state.genderValid ? "" : "Поле пола должно быть установлено";
+        let errorSpecializationMessage = this.state.specializationValid ? "" : "Поле специализации должно быть установлено";
+        let errorPositionMessage = this.state.positionValid ? "" : "Поле должности должно быть установлено";
 
         return (
             <div>
-                <form name="frm" class="wrapper" id="form" onSubmit={this.handleSubmit}>
-                    <div id="form_holder1">Регистрация</div>
+                {this.state.showRegForm &&
+                    (<form name="frm" class="wrapper" id="form" onSubmit={this.handleSubmit}>
+                        <div id="form_holder1">Регистрация</div>
 
-                    <div className="div1"> Логин:
-                        <input size="26" type="text" value={this.state.login} onChange={this.onLoginChange}
-                               placeholder="Введите логин"/>
-                        {this.state.showLoginError && (<label>{errorLoginMessage}</label>)}
-                    </div>
+                        <div className="div1"> Логин:
+                            <input size="26" type="text" value={this.state.login} onChange={this.onLoginChange}
+                                   placeholder="Введите логин"/>
+                            {this.state.showLoginError && (<label>{errorLoginMessage}</label>)}
+                        </div>
 
-                    <div className="div1"> Пароль:
-                        <input value={this.state.password} onChange={this.onPasswordChange} size="26" type="password"
-                               placeholder="Введите пароль"/>
-                        {this.state.showPasswordError && <label>{errorPasswordMessage}</label>}
-                    </div>
+                        <div className="div1"> Пароль:
+                            <input value={this.state.password} onChange={this.onPasswordChange} size="26"
+                                   type="password"
+                                   placeholder="Введите пароль"/>
+                            {this.state.showPasswordError && <label>{errorPasswordMessage}</label>}
+                        </div>
 
-                    <div className="div1"> Подтверждение пароля:
-                        <input value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} size="26"
-                               type="password" placeholder="Подтверждение пароля"/>
-                        {this.state.showConfirmPasswordError && <label>{errorConfirmPasswordMessage}</label>}
-                    </div>
+                        <div className="div1"> Подтверждение пароля:
+                            <input value={this.state.confirmPassword} onChange={this.onConfirmPasswordChange} size="26"
+                                   type="password" placeholder="Подтверждение пароля"/>
+                            {this.state.showConfirmPasswordError && <label>{errorConfirmPasswordMessage}</label>}
+                        </div>
 
-                    <div className="div1"> Полное имя:
-                        <input value={this.state.fullname} onChange={this.onFullNameChange} size="26" type="text"
-                               placeholder="Имя Фамилия"/>
-                        {this.state.showFullNameError && (<label>{errorFullNameMessage}</label>)}
-                    </div>
+                        <div className="div1"> Полное имя:
+                            <input value={this.state.fullname} onChange={this.onFullNameChange} size="26" type="text"
+                                   placeholder="Имя Фамилия"/>
+                            {this.state.showFullNameError && (<label>{errorFullNameMessage}</label>)}
+                        </div>
 
-                    <div className="div1"> Пол:
-                        <input checked={this.state.isCheckedM} value="М" type="radio" id="male" name="gender"
-                               onChange={this.onGenderChange}/> <span> M</span>
-                        <input checked={this.state.isCheckedF} value="Ж" type="radio" id="female" name="gender"
-                               onChange={this.onGenderChange}/> <span>Ж </span>
-                        <br/>
-                        {this.state.showGenderError && (<label>{errorGenderMessage}</label>)}
-                    </div>
+                        <div className="div1"> Пол:
+                            <input checked={this.state.checkM} value="М" type="radio" id="male" name="gender"
+                                   onChange={this.onGenderChange}/> <span> M</span>
+                            <input checked={this.state.checkF} value="Ж" type="radio" id="female" name="gender"
+                                   onChange={this.onGenderChange}/> <span>Ж </span>
+                            <br/>
+                            {this.state.showGenderError && (<label>{errorGenderMessage}</label>)}
+                        </div>
 
-                    <div className="div1"> Специализация:<br/>
-                        <input checked={this.state.isCheckedDesign} onChange={this.onSpecializationChange}
-                               className="checkbox" size="26"
-                               value="Design" type="checkbox" name="check1"/>
-                        <span>Дизайн</span> <br/>
-                        <input checked={this.state.isCheckedProgram} onChange={this.onSpecializationChange}
-                               className="input1 checkbox"
-                               value="Program" size="26" type="checkbox"/>
-                        <span>Программирование</span> <br/>
-                        <input checked={this.state.isCheckedAdmin} onChange={this.onSpecializationChange}
-                               className="input1 checkbox"
-                               value="Admin" size="26" type="checkbox" name="check1"/>
-                        <span>Администрирование</span> <br/>
-                        {this.state.showSpecializationError && (<label>{errorSpecializationMessage}</label>)}
-                    </div>
+                        <div className="div1"> Специализация:<br/>
+                            <input checked={this.state.checkDesign} onChange={this.onSpecializationChange}
+                                   className="checkbox" size="26"
+                                   value="Дизайн" type="checkbox" name="check1"/>
+                            <span>Дизайн</span> <br/>
+                            <input checked={this.state.checkProgram} onChange={this.onSpecializationChange}
+                                   className="input1 checkbox"
+                                   value="Программирование" size="26" type="checkbox"/>
+                            <span>Программирование</span> <br/>
+                            <input checked={this.state.checkAdmin} onChange={this.onSpecializationChange}
+                                   className="input1 checkbox"
+                                   value="Администрирование" size="26" type="checkbox" name="check1"/>
+                            <span>Администрирование</span> <br/>
+                            {this.state.showSpecializationError && (<label>{errorSpecializationMessage}</label>)}
+                        </div>
 
-                    <div className="div1">
-                        Должность:
-                        <select value={this.state.position} onChange={this.onPositionChange}>
-                            <option value="none">-----------------Виберите-----------------</option>
-                            <option value="director">Директор</option>
-                            <option value="deputyDirector">Заместитель директора</option>
-                            <option value="projectManager">Руководитель проекта</option>
-                            <option value="departmentHead">Начальник отдела</option>
-                            <option value="programmer">Програмист</option>
-                            <option value="designer">Дизайнер</option>
-                            <option value="consultant">Консультант</option>
-                            <option value="employee">Служащий</option>
-                        </select>
-                        {this.state.showPositionError && (<label>{errorPositionMessage}</label>)}
-                        <hr/>
-                    </div>
+                        <div className="div1">
+                            Должность:
+                            <select value={this.state.position} onChange={this.onPositionChange}>
+                                <option value="none">Виберите</option>
+                                <option value="Директор">Директор</option>
+                                <option value="Заместитель директора">Заместитель директора</option>
+                                <option value="Руководитель проекта">Руководитель проекта</option>
+                                <option value="Начальник отдела">Начальник отдела</option>
+                                <option value="Програмист">Програмист</option>
+                                <option value="Дизайнер">Дизайнер</option>
+                                <option value="Консультант">Консультант</option>
+                                <option value="Служащий">Служащий</option>
+                            </select>
+                            {this.state.showPositionError && (<label>{errorPositionMessage}</label>)}
+                            <hr/>
+                        </div>
 
-                    <div id="div3">
-                        <input id="register" type="submit" value="Регистрация"/>
-                        <input type="reset" value="Сброс" onClick={this.onReset}/>
-                    </div>
-                </form>
+                        <div id="div3">
+                            <input id="register" type="submit" value="Регистрация"/>
+                            <input type="reset" value="Сброс" onClick={this.onReset}/>
+                        </div>
+                    </form>)}
 
-                    {this.state.submittedData && (
-                        <div className="wrapper">
+                {this.state.submittedData && (
+                    <div className="wrapperV1">
                         <table>
                             <tbody>
                             <tr>
@@ -325,9 +329,12 @@ class UserForm extends Component {
                                 <td>{this.state.position}</td>
                             </tr>
                             </tbody>
-                        </table></div>
-                    )}
-
+                        </table>
+                        <div id="div3">
+                            <input type="reset" value="Назад" onClick={this.onBackClick}/>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }

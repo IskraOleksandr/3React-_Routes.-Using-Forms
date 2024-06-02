@@ -26,6 +26,16 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.wrapperV1 {
+  max-width: max-content;
+  margin: 50px auto;
+  padding: 10px;
+  border: solid 1px #ccc;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 #form_holder1 {
   font-size: 24px;
   font-weight: bold;
